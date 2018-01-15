@@ -1,4 +1,4 @@
-package io.github.sof3.pocketstorm;
+package io.pmmp.pocketstorm;
 
 import java.io.IOException;
 

@@ -1,4 +1,4 @@
-package io.github.sof3.pocketstorm;
+package io.pmmp.pocketstorm;
 
 public class SneakyException extends RuntimeException{
 	public SneakyException(Throwable cause){

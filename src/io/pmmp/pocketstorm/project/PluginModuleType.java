@@ -1,11 +1,11 @@
-package io.github.sof3.pocketstorm.project;
+package io.pmmp.pocketstorm.project;
 
 import javax.swing.Icon;
 
 import com.intellij.openapi.module.ModuleType;
 import org.jetbrains.annotations.NotNull;
 
-import io.github.sof3.pocketstorm.PocketStormIcon;
+import io.pmmp.pocketstorm.PocketStormIcon;
 
 @Deprecated
 public class PluginModuleType extends ModuleType<PluginModuleBuilder>{

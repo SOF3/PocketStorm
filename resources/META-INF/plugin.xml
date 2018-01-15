@@ -1,5 +1,5 @@
 <idea-plugin url="https://github.com/SOF3/PocketStorm">
-	<id>io.github.sof3.pocketstorm</id>
+	<id>io.pmmp.pocketstorm</id>
 	<name>PocketStorm</name>
 	<version>1.0.0</version>
 	<vendor email="sofe2038@gmail.com" url="http://github.com/SOF3">SOFe</vendor>
@@ -33,8 +33,8 @@
 	<depends>com.intellij.modules.platform</depends>
 
 	<extensions defaultExtensionNs="com.intellij">
-		<projectTemplatesFactory implementation="io.github.sof3.pocketstorm.project.PocketTemplateFactory"/>
-		<directoryProjectGenerator implementation="io.github.sof3.pocketstorm.project.PluginProjectGenerator"/>
+		<projectTemplatesFactory implementation="io.pmmp.pocketstorm.project.PocketTemplateFactory"/>
+		<directoryProjectGenerator implementation="io.pmmp.pocketstorm.project.PluginProjectGenerator"/>
 		<internalFileTemplate name="PocketMine Plugin Main Class"/>
 	</extensions>
 

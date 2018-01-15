@@ -1,4 +1,4 @@
-package io.github.sof3.pocketstorm.pm;
+package io.pmmp.pocketstorm.pm;
 
 import java.util.LinkedList;
 import java.util.List;

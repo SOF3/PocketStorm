@@ -1,4 +1,4 @@
-package io.github.sof3.pocketstorm.project;
+package io.pmmp.pocketstorm.project;
 
 import java.io.OutputStreamWriter;
 import java.io.Writer;
@@ -27,12 +27,12 @@ import org.jetbrains.annotations.Nullable;
 import com.jetbrains.php.config.PhpLanguageLevel;
 import com.jetbrains.php.config.PhpProjectConfigurationFacade;
 
-import io.github.sof3.pocketstorm.MyUtil;
-import io.github.sof3.pocketstorm.PocketStormIcon;
-import io.github.sof3.pocketstorm.pm.PocketMine;
-import io.github.sof3.pocketstorm.project.ui.PluginGeneratorPeer;
+import io.pmmp.pocketstorm.MyUtil;
+import io.pmmp.pocketstorm.PocketStormIcon;
+import io.pmmp.pocketstorm.pm.PocketMine;
+import io.pmmp.pocketstorm.project.ui.PluginGeneratorPeer;
 
-import static io.github.sof3.pocketstorm.SneakyException.s;
+import static io.pmmp.pocketstorm.SneakyException.s;
 
 public class PluginProjectGenerator extends WebProjectTemplate<PluginProjectSettings>{
 	@Nls

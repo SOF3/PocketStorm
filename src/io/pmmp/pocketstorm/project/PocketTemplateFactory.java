@@ -1,4 +1,4 @@
-package io.github.sof3.pocketstorm.project;
+package io.pmmp.pocketstorm.project;
 
 import javax.swing.Icon;
 
@@ -8,7 +8,7 @@ import com.intellij.platform.ProjectTemplatesFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import io.github.sof3.pocketstorm.PocketStormIcon;
+import io.pmmp.pocketstorm.PocketStormIcon;
 
 public class PocketTemplateFactory extends ProjectTemplatesFactory{
 	@NotNull

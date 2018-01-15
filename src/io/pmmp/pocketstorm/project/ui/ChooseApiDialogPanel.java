@@ -1,4 +1,4 @@
-package io.github.sof3.pocketstorm.project.ui;
+package io.pmmp.pocketstorm.project.ui;
 
 import java.awt.Component;
 import java.awt.event.KeyAdapter;
@@ -22,8 +22,8 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBList;
 import org.jetbrains.annotations.Nullable;
 
-import io.github.sof3.pocketstorm.pm.ApiVersion;
-import io.github.sof3.pocketstorm.pm.PocketMine;
+import io.pmmp.pocketstorm.pm.ApiVersion;
+import io.pmmp.pocketstorm.pm.PocketMine;
 
 public class ChooseApiDialogPanel extends JPanel{
 	private DefaultListModel<ApiVersionHolder> model;

@@ -1,4 +1,4 @@
-package io.github.sof3.pocketstorm.pm;
+package io.pmmp.pocketstorm.pm;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 import com.google.gson.stream.JsonReader;
 import org.apache.http.client.fluent.Request;
 
-import static io.github.sof3.pocketstorm.SneakyException.s;
+import static io.pmmp.pocketstorm.SneakyException.s;
 
 public final class PocketMine{
 	public final static Pattern VALID_PLUGIN_NAME = Pattern.compile("^[A-Za-z0-9_.-]+$");

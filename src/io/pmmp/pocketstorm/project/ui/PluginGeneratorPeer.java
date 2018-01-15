@@ -1,4 +1,4 @@
-package io.github.sof3.pocketstorm.project.ui;
+package io.pmmp.pocketstorm.project.ui;
 
 import java.awt.Color;
 import java.util.*;
@@ -24,10 +24,10 @@ import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import io.github.sof3.pocketstorm.pm.ApiVersion;
-import io.github.sof3.pocketstorm.pm.PocketMine;
-import io.github.sof3.pocketstorm.project.PluginProjectGenerator;
-import io.github.sof3.pocketstorm.project.PluginProjectSettings;
+import io.pmmp.pocketstorm.pm.ApiVersion;
+import io.pmmp.pocketstorm.project.PluginProjectGenerator;
+import io.pmmp.pocketstorm.pm.PocketMine;
+import io.pmmp.pocketstorm.project.PluginProjectSettings;
 
 public class PluginGeneratorPeer implements ProjectGeneratorPeer<PluginProjectSettings>{
 	private JPanel ui_panel;

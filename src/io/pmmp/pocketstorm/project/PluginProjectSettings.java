@@ -1,4 +1,4 @@
-package io.github.sof3.pocketstorm.project;
+package io.pmmp.pocketstorm.project;
 
 import java.io.StringWriter;
 import java.io.Writer;
