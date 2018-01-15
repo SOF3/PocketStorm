@@ -1,15 +1,14 @@
 package io.github.sof3.pocketstorm.pm;
 
-import com.google.gson.stream.JsonReader;
-import lombok.SneakyThrows;
-import org.apache.http.client.fluent.Request;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
+
+import com.google.gson.stream.JsonReader;
+import org.apache.http.client.fluent.Request;
 
 import static io.github.sof3.pocketstorm.SneakyException.s;
 

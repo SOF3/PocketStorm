@@ -1,5 +1,19 @@
 package io.github.sof3.pocketstorm.project.ui;
 
+import java.awt.Color;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Set;
+import java.util.stream.Collectors;
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+
 import com.intellij.ide.util.projectWizard.SettingsStep;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -9,26 +23,14 @@ import com.intellij.platform.ProjectGeneratorPeer;
 import com.intellij.platform.WebProjectGenerator;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.util.ThrowableRunnable;
-import io.github.sof3.pocketstorm.pm.ApiVersion;
-import io.github.sof3.pocketstorm.pm.PocketMine;
-import io.github.sof3.pocketstorm.project.PluginProjectGenerator;
-import io.github.sof3.pocketstorm.project.PluginProjectSettings;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import java.awt.Color;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Set;
-import java.util.stream.Collectors;
+import io.github.sof3.pocketstorm.pm.ApiVersion;
+import io.github.sof3.pocketstorm.pm.PocketMine;
+import io.github.sof3.pocketstorm.project.PluginProjectGenerator;
+import io.github.sof3.pocketstorm.project.PluginProjectSettings;
 
 public class PluginGeneratorPeer implements ProjectGeneratorPeer<PluginProjectSettings>{
 	private JPanel ui_panel;
@@ -73,8 +75,11 @@ public class PluginGeneratorPeer implements ProjectGeneratorPeer<PluginProjectSe
 		rwListener.listen(ui_edit_version);
 		rwListener.listen(ui_edit_desc);
 		ui_button_apiEdit.addActionListener(e -> {
-			DialogWrapper dialog = new ChooseApiDialogPanel.ChooseApiDialogWrapper(ui_panel, this::setApiList);
+			ChooseApiDialogPanel.ChooseApiDialogWrapper dialog = new ChooseApiDialogPanel.ChooseApiDialogWrapper(ui_panel, this::setApiList);
 			dialog.show();
+			if(dialog.getExitCode() == DialogWrapper.OK_EXIT_CODE){
+				dialog.publishResult();
+			}
 		});
 	}
 
@@ -172,7 +177,7 @@ public class PluginGeneratorPeer implements ProjectGeneratorPeer<PluginProjectSe
 
 	@Override
 	@SuppressWarnings("deprecation")
-	public void addSettingsStateListener(@NotNull WebProjectGenerator.SettingsStateListener listener){
+	public void addSettingsStateListener(@SuppressWarnings("deprecated") @NotNull WebProjectGenerator.SettingsStateListener listener){
 		addSettingsListener(listener::stateChanged);
 	}
 

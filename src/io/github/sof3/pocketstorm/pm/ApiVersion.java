@@ -1,15 +1,16 @@
 package io.github.sof3.pocketstorm.pm;
 
-import com.google.gson.stream.JsonReader;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+import com.google.gson.stream.JsonReader;
 
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter

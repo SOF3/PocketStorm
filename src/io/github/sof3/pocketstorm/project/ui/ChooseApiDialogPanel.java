@@ -1,15 +1,5 @@
 package io.github.sof3.pocketstorm.project.ui;
 
-import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.ui.components.JBCheckBox;
-import com.intellij.ui.components.JBList;
-import io.github.sof3.pocketstorm.pm.ApiVersion;
-import io.github.sof3.pocketstorm.pm.PocketMine;
-import lombok.NonNull;
-import lombok.ToString;
-import lombok.Value;
-
-import javax.swing.*;
 import java.awt.Component;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -19,13 +9,28 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import javax.swing.*;
+
+import lombok.NonNull;
+import lombok.ToString;
+import lombok.Value;
+
+import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.ui.ValidationInfo;
+import com.intellij.ui.components.JBCheckBox;
+import com.intellij.ui.components.JBLabel;
+import com.intellij.ui.components.JBList;
+import org.jetbrains.annotations.Nullable;
+
+import io.github.sof3.pocketstorm.pm.ApiVersion;
+import io.github.sof3.pocketstorm.pm.PocketMine;
 
 public class ChooseApiDialogPanel extends JPanel{
 	private DefaultListModel<ApiVersionHolder> model;
 	private JPanel main;
-	private JBList cbList;
+	@SuppressWarnings("unused") private JBList cbList;
 	private CheckBoxList cbList0;
-	private com.intellij.ui.components.JBLabel descArea;
+	private JBLabel descArea;
 	private ApiVersionHolder[] versions = null;
 	private Set<ApiRange> ranges;
 
@@ -201,7 +206,7 @@ public class ChooseApiDialogPanel extends JPanel{
 		}
 	}
 
-	static class ChooseApiDialogWrapper extends DialogWrapper{
+	public static class ChooseApiDialogWrapper extends DialogWrapper{
 		private final Consumer<Set<ApiVersion>> setApiList;
 		private ChooseApiDialogPanel panel;
 
@@ -218,8 +223,17 @@ public class ChooseApiDialogPanel extends JPanel{
 			return panel;
 		}
 
+		@Nullable
+		@Override
+		protected ValidationInfo doValidate(){
+			if(panel.ranges.isEmpty()){
+				return new ValidationInfo("No API versions selected");
+			}
+			return null;
+		}
+
 		public void publishResult(){
-			setApiList.accept(panel.ranges.stream().map(range -> range.from.version).collect(Collectors.toSet())); // TODO implement
+			setApiList.accept(panel.ranges.stream().map(range -> range.from.version).collect(Collectors.toSet()));
 		}
 	}
 }

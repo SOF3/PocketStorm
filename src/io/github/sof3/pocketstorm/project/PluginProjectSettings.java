@@ -1,17 +1,19 @@
 package io.github.sof3.pocketstorm.project;
 
-import lombok.Builder;
-import lombok.Value;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.yaml.snakeyaml.Yaml;
-
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import lombok.Builder;
+import lombok.Value;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import org.yaml.snakeyaml.Yaml;
 
 @Value
 @Builder(builderClassName = "Builder")

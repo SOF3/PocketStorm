@@ -1,4 +1,4 @@
-.idea/
+/.idea/*
 *.class
 *.log
 *.ctxt
@@ -21,3 +21,9 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 test-projects/
+
+!/.idea/codeStyles/
+!/.idea/compiler.xml
+!/.idea/misc.xml
+!/.idea/modules.xml
+!/.idea/vcs.xml

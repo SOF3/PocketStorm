@@ -1,5 +1,10 @@
 package io.github.sof3.pocketstorm.project;
 
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import javax.swing.Icon;
+
 import com.intellij.ide.util.projectWizard.WebProjectTemplate;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
@@ -8,16 +13,12 @@ import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.platform.ProjectGeneratorPeer;
-import io.github.sof3.pocketstorm.PocketStormIcon;
-import io.github.sof3.pocketstorm.project.ui.PluginGeneratorPeer;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.Icon;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import io.github.sof3.pocketstorm.PocketStormIcon;
+import io.github.sof3.pocketstorm.project.ui.PluginGeneratorPeer;
 
 import static io.github.sof3.pocketstorm.SneakyException.s;
 

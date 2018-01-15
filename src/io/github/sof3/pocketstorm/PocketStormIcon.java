@@ -1,8 +1,8 @@
 package io.github.sof3.pocketstorm;
 
-import com.intellij.openapi.util.IconLoader;
-
 import javax.swing.Icon;
+
+import com.intellij.openapi.util.IconLoader;
 
 public interface PocketStormIcon{
 	Icon FULL = IconLoader.getIcon("/icons/pocketmine-original.png");

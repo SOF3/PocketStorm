@@ -1,13 +1,14 @@
 package io.github.sof3.pocketstorm.project;
 
+import javax.swing.Icon;
+
 import com.intellij.ide.util.projectWizard.WizardContext;
 import com.intellij.platform.ProjectTemplate;
 import com.intellij.platform.ProjectTemplatesFactory;
-import io.github.sof3.pocketstorm.PocketStormIcon;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.Icon;
+import io.github.sof3.pocketstorm.PocketStormIcon;
 
 public class PocketTemplateFactory extends ProjectTemplatesFactory{
 	@NotNull
