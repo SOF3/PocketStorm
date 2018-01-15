@@ -1,0 +1,44 @@
+<idea-plugin url="https://github.com/SOF3/PocketStorm">
+	<id>io.github.sof3.pocketstorm</id>
+	<name>PocketStorm</name>
+	<version>1.0.0</version>
+	<vendor email="sofe2038@gmail.com" url="http://github.com/SOF3">SOFe</vendor>
+
+	<description><![CDATA[
+		PhpStorm integration for PocketMine plugin development.<br/>
+		<b>Features:</b>
+		<ul>
+			<li>Generating plugin project</li>
+		</ul>
+		<b>Planned:</b>
+		<ul>
+			<li>Synchronizing PocketMine source</li>
+			<li>PocketMine-specific inspections</li>
+		</ul>
+		]]></description>
+
+	<change-notes><![CDATA[
+		<b>v1.0.0</b>
+		<ul>
+			<li>Initial version</li>
+			<li>Added project type "PocketMine plugin"</li>
+		</ul>
+    ]]>
+	</change-notes>
+
+	<idea-version since-build="173"/>
+
+	<depends>com.intellij.modules.lang</depends>
+	<depends>com.jetbrains.php</depends>
+	<depends>com.intellij.modules.platform</depends>
+
+	<extensions defaultExtensionNs="com.intellij">
+		<projectTemplatesFactory implementation="io.github.sof3.pocketstorm.project.PocketTemplateFactory"/>
+		<directoryProjectGenerator implementation="io.github.sof3.pocketstorm.project.PluginProjectGenerator"/>
+	</extensions>
+
+	<actions>
+		<!-- Add your actions here -->
+	</actions>
+
+</idea-plugin>
