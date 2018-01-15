@@ -1,10 +1,7 @@
 package io.github.sof3.pocketstorm.project.ui;
 
 import java.awt.Color;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -42,19 +39,19 @@ public class PluginGeneratorPeer implements ProjectGeneratorPeer<PluginProjectSe
 	private JButton ui_button_apiEdit;
 	private JLabel ui_label_apiList;
 	private JLabel ui_label_warning;
+	private JTextField ui_edit_author;
 
 	@Getter private boolean backgroundJobRunning = true;
 
-	private void createUIComponents(){
-	}
-
+	@Getter private final PluginProjectGenerator generator;
 	private Set<ApiVersion> apiList;
 
-	@Getter private final PluginProjectGenerator generator;
+	private boolean nsChanged = false, mainChanged = false, userChange = true;
 
 	@SuppressWarnings("unchecked") private final ThrowableRunnable<SettingsException>[] validators = new ThrowableRunnable[]{
 			this::validateName,
 			this::validateMain,
+			this::validateVersion,
 	};
 
 	public PluginGeneratorPeer(PluginProjectGenerator generator){
@@ -81,6 +78,73 @@ public class PluginGeneratorPeer implements ProjectGeneratorPeer<PluginProjectSe
 				dialog.publishResult();
 			}
 		});
+
+		ui_edit_main_class.setText("Main");
+		ui_edit_author.setText(System.getProperty("user.name"));
+		ui_edit_main_ns.getDocument().addDocumentListener(new DocumentAdapter(){
+			@Override
+			protected void textChanged(DocumentEvent e){
+				nsChanged = nsChanged || userChange;
+			}
+		});
+		ui_edit_main_class.getDocument().addDocumentListener(new DocumentAdapter(){
+			@Override
+			protected void textChanged(DocumentEvent e){
+				mainChanged = mainChanged || userChange;
+			}
+		});
+		DocumentAdapter listener = new DocumentAdapter(){
+			@Override
+			protected void textChanged(DocumentEvent e){
+				if(!nsChanged || !mainChanged){
+					String author = normalizeIdentifier(ui_edit_author.getText());
+					String name = normalizeIdentifier(ui_edit_name.getText());
+					if(author == null || name == null){
+						return;
+					}
+					userChange = false;
+					if(!nsChanged){
+						ui_edit_main_ns.setText(author + "\\" + name);
+					}
+					if(!mainChanged){
+						ui_edit_main_class.setText(name);
+					}
+					userChange = true;
+					refreshWarnings();
+				}
+			}
+		};
+		ui_edit_name.getDocument().addDocumentListener(listener);
+		ui_edit_author.getDocument().addDocumentListener(listener);
+
+		ui_edit_version.setText("0.1.0");
+	}
+
+	@Nullable
+	private static String normalizeIdentifier(String subject){
+		StringBuilder builder = null;
+		for(int i = 0; i < subject.length(); ++i){
+			char ch = subject.charAt(i);
+			if(ch == ' ' || ch == '-' || ch == '.'){
+				ch = '_';
+			}
+			boolean digit = '0' <= ch && ch <= '9';
+			boolean alpha = 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z';
+			boolean under = ch == '_';
+			if(builder == null){
+				if(digit || alpha || under){
+					builder = new StringBuilder(subject.length());
+					builder.append(digit ? "_" : "").append(ch);
+				}
+			}else{
+				if(digit || alpha || under){
+					builder.append(ch);
+				}else{
+					break; // should break?
+				}
+			}
+		}
+		return builder != null ? builder.toString().replaceAll("[_]{2,}", "_") : null;
 	}
 
 	public void setApiList(Set<ApiVersion> versions){
@@ -106,12 +170,13 @@ public class PluginGeneratorPeer implements ProjectGeneratorPeer<PluginProjectSe
 		if(ns.length() == 0){
 			throw new SettingsException("Invalid namespace", "Namespace must not be empty", Severity.ERROR);
 		}
-		if(ns.equalsIgnoreCase("pocketmine")){
-			for(String n : ns.split("\\\\")){
-				if(!PocketMine.VALID_IDENTIFIER_NAME.matcher(n).matches()){
-					throw new SettingsException("Invalid namespace", "Not a valid identifier", Severity.ERROR);
-				}
+		for(String n : ns.split("\\\\")){
+			if(!PocketMine.VALID_IDENTIFIER_NAME.matcher(n).matches()){
+				throw new SettingsException("Invalid namespace", "Not a valid identifier", Severity.ERROR);
 			}
+		}
+		if(ns.startsWith("pocketmine")){
+			throw new SettingsException("Invalid namespace", "Namespace cannot start with \"pocketmine\"", Severity.ERROR);
 		}
 		for(String n : main.split("\\\\")){
 			if(!PocketMine.VALID_IDENTIFIER_NAME.matcher(n).matches()){
@@ -123,6 +188,15 @@ public class PluginGeneratorPeer implements ProjectGeneratorPeer<PluginProjectSe
 		}
 	}
 
+	private void validateVersion() throws SettingsException{
+		String version = ui_edit_version.getText().trim();
+		if(version.isEmpty()){
+			throw new SettingsException("Invalid version", "The version must not be empty", Severity.ERROR);
+		}
+		if(version.length() >= 2 && version.charAt(0) == 'v' && Character.isDigit(version.charAt(1))){
+			throw new SettingsException("Warning", "The version does not need to start with \"v\"", Severity.WARNING);
+		}
+	}
 
 	public void refreshWarnings(){
 		SettingsException warning = null;
@@ -152,9 +226,10 @@ public class PluginGeneratorPeer implements ProjectGeneratorPeer<PluginProjectSe
 				.name(ui_edit_name.getText())
 				.namespace(ui_edit_main_ns.getText())
 				.main(ui_edit_main_class.getText())
-				.initialVersion(ui_edit_version.getText())
-				.description(ui_edit_desc.getText().length() > 0 ? ui_edit_desc.getText() : null)
+				.initialVersion(ui_edit_version.getText().trim())
+				.description(ui_edit_desc.getText().trim().length() > 0 ? ui_edit_desc.getText().trim() : null)
 				.api(apiList.stream().map(ApiVersion::getName).collect(Collectors.toSet()))
+				.authors(Arrays.asList((String[]) (ui_edit_author.getText().trim().isEmpty() ? new String[0] : new String[]{ui_edit_author.getText().trim()})))
 				.build();
 	}
 

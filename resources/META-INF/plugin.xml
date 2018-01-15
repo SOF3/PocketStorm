@@ -35,6 +35,7 @@
 	<extensions defaultExtensionNs="com.intellij">
 		<projectTemplatesFactory implementation="io.github.sof3.pocketstorm.project.PocketTemplateFactory"/>
 		<directoryProjectGenerator implementation="io.github.sof3.pocketstorm.project.PluginProjectGenerator"/>
+		<internalFileTemplate name="PocketMine Plugin Main Class"/>
 	</extensions>
 
 	<actions>

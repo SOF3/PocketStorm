@@ -1,10 +1,16 @@
 package io.github.sof3.pocketstorm.project;
 
-import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Properties;
+import java.util.Set;
 import javax.swing.Icon;
 
+import com.intellij.ide.fileTemplates.FileTemplate;
+import com.intellij.ide.fileTemplates.FileTemplateManager;
+import com.intellij.ide.fileTemplates.FileTemplateUtil;
 import com.intellij.ide.util.projectWizard.WebProjectTemplate;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
@@ -13,11 +19,17 @@ import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.platform.ProjectGeneratorPeer;
+import com.intellij.psi.impl.file.PsiDirectoryFactory;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import com.jetbrains.php.config.PhpLanguageLevel;
+import com.jetbrains.php.config.PhpProjectConfigurationFacade;
+
+import io.github.sof3.pocketstorm.MyUtil;
 import io.github.sof3.pocketstorm.PocketStormIcon;
+import io.github.sof3.pocketstorm.pm.PocketMine;
 import io.github.sof3.pocketstorm.project.ui.PluginGeneratorPeer;
 
 import static io.github.sof3.pocketstorm.SneakyException.s;
@@ -54,10 +66,25 @@ public class PluginProjectGenerator extends WebProjectTemplate<PluginProjectSett
 			){
 				settings.dumpYaml(writer);
 				writer.close();
+
+				Set<String> php = new HashSet<>();
+				settings.getApi().forEach(api -> php.addAll(PocketMine.apiList.getValue().get(api).getPhp()));
+
+				//noinspection ConstantConditions
+				PhpProjectConfigurationFacade.getInstance(project).setLanguageLevel(php.stream().map(PhpLanguageLevel::from)
+						.min(Comparator.comparingInt(PhpLanguageLevel::ordinal)).get());
+
 				VirtualFile src = root.createChildDirectory(this, "src");
 				ModifiableRootModel model = ModuleRootManager.getInstance(module).getModifiableModel();
 				model.addContentEntry(src.getParent()).addSourceFolder(src, false);
-			}catch(IOException e){
+				model.commit();
+
+				FileTemplate template = FileTemplateManager.getInstance(project).getInternalTemplate("PocketMine Plugin Main Class");
+				Properties props = new Properties();
+
+				FileTemplateUtil.createFromTemplate(template, settings.getMain() + ".php", props,
+						PsiDirectoryFactory.getInstance(project).createDirectory(MyUtil.lazyCreateChildDir(this, src, settings.getNamespace())));
+			}catch(Exception e){
 				throw s(e);
 			}
 		});

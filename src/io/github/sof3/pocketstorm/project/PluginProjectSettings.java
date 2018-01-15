@@ -2,10 +2,7 @@ package io.github.sof3.pocketstorm.project;
 
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import lombok.Builder;
 import lombok.Value;
@@ -18,24 +15,24 @@ import org.yaml.snakeyaml.Yaml;
 @Value
 @Builder(builderClassName = "Builder")
 public class PluginProjectSettings{
-	@NotNull String name; // check
-	@NotNull String namespace; // check
-	@NotNull String main; // check
-	@NotNull Set<String> api; // check
-	@Nullable Set<Integer> protocols;
-	@NotNull Set<String> extensions;
-	@NotNull String initialVersion; // check
-	@Nullable String description; // check
-	@NotNull List<String> authors;
-	@Nullable String website;
-	@NotNull LoadOrder load;
+	@NotNull String name; // configurable from generator peer
+	@NotNull String namespace; // configurable from generator peer
+	@NotNull String main; // configurable from generator peer
+	@NotNull Set<String> api; // configurable from generator peer
+	@Nullable Set<Integer> protocols = null;
+	@NotNull Set<String> extensions = new HashSet<>();
+	@NotNull String initialVersion; // configurable from generator peer
+	@Nullable String description; // configurable from generator peer
+	@NotNull List<String> authors; // configurable from generator peer
+	@Nullable String website = null;
+	@NotNull LoadOrder load = LoadOrder.POSTWORLD;
 
 	public void dumpYaml(Writer os){
 		Yaml yaml = new Yaml();
 		Map<String, Object> data = new HashMap<>();
 		data.put("name", name);
 		data.put("main", namespace + "\\" + main);
-		data.put("api", api);
+		data.put("api", api.toArray());
 		if(protocols != null){
 			data.put("mcpe-protocol", protocols);
 		}

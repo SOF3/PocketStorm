@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import com.intellij.openapi.application.ApplicationManager;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class Cache<T>{
@@ -43,5 +44,13 @@ public class Cache<T>{
 		}
 		assert state == 2;
 		consumer.accept(value);
+	}
+
+	@NotNull
+	public T getValue(){
+		if(value == null){
+			throw new IllegalStateException("Not ready yet");
+		}
+		return value;
 	}
 }

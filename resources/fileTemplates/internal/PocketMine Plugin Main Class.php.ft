@@ -1,0 +1,33 @@
+<?php
+#parse("PHP File Header.php")
+
+namespace ${NAMESPACE};
+
+#if (${INIT_MAIN_COMMANDS})
+use pocketmine\command\CommandSender;
+#end
+#if (${INIT_MAIN_LISTENER})
+use pocketmine\event\Listener;
+#end
+use pocketmine\plugin\PluginBase;
+
+class ${MAIN_CLASS} extends PluginBase{
+	public function onEnable(){
+#if (${INIT_MAIN_LISTENER})
+		\$this->getServer()->getPluginManager()->registerEvents(\$this, \$this);
+#end
+	}
+#if (${INIT_MAIN_COMMANDS})
+
+	public function onCommand(CommandSender \$sender, Command \$command, string \$label, array \$args) : bool{
+		switch(\$command->getName()){
+#foreach( $command in $commands )
+			case "${command}":
+				// TODO: Handle the /${command} command
+				return true;
+#end
+		}
+		return false;
+	}
+#end
+}
