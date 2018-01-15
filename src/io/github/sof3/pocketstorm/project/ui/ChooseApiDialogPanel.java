@@ -37,15 +37,18 @@ public class ChooseApiDialogPanel extends JPanel{
 	@Value
 	private static class ApiRange{
 		@NonNull ApiVersionHolder from, to;
+
+		public boolean includes(int number){
+			return from.version.getNumber() <= number && number <= to.version.getNumber();
+		}
 	}
 
-	public ChooseApiDialogPanel(){
+	public ChooseApiDialogPanel(@Nullable Set<String> initialRanges){
 		PocketMine.apiList.request(apis -> {
 			versions = new ApiVersionHolder[apis.size()];
 			ApiVersionHolder lastIncompatible = null, last = null;
 			for(ApiVersion version : apis.values()){
 				ApiVersionHolder holder = versions[version.getNumber()] = new ApiVersionHolder(version);
-				System.out.println(version.getName());
 				if(version.isIncompatible()){
 					lastIncompatible = holder;
 				}
@@ -53,55 +56,73 @@ public class ChooseApiDialogPanel extends JPanel{
 			}
 
 			Set<ApiRange> ranges = new HashSet<>();
-			ranges.add(new ApiRange(lastIncompatible, last));
-			setRanges(ranges);
+			if(initialRanges != null){
+				ApiVersionHolder start = null;
+				for(int i = 0; i < versions.length; ++i){
+					ApiVersionHolder version = versions[i];
+					for(String initialRange : initialRanges){
+						if(start != null){
+							if(version.version.isIncompatible()){
+								ranges.add(new ApiRange(start, versions[i - 1]));
+							}
+						}
+						if(start == null){
+							if(version.version.getName().equals(initialRange)){
+								start = version;
+							}
+						}
+					}
+				}
+				if(start != null){
+					ranges.add(new ApiRange(start, versions[versions.length - 1]));
+				}
+			}else{
+				ranges.add(new ApiRange(lastIncompatible, last));
+			}
+			setRanges(ranges, true);
 			cbList0.setSelectedIndex(versions.length - 1);
 
 			add(main);
 		});
 	}
 
-	public void setValues(Set<String> starts){
+	public void recalculateRanges(){
 		Set<ApiRange> tempRangeSet = new HashSet<>();
 		ApiVersionHolder start = null;
 		for(int i = 0; i < versions.length; ++i){
-			ApiVersionHolder current = versions[i];
 			if(start != null){
-				// selection open
-				if(current.version.isIncompatible()){
-					// end selection at the previous version
+				if(versions[i].version.isIncompatible()){
 					tempRangeSet.add(new ApiRange(start, versions[i - 1]));
 					start = null;
 				}
-				// else expand the selection
-			}
-			if(start == null){
-				// looking for new selections to open
-				if(starts.contains(current.version.getName())){
-					start = current;
+				// otherwise, it SHOULD continue to be selected
+			}else{
+				if(versions[i].cb.isSelected()){
+					start = versions[i];
 				}
 			}
 		}
 		if(start != null){
 			tempRangeSet.add(new ApiRange(start, versions[versions.length - 1]));
 		}
-		setRanges(tempRangeSet);
+		setRanges(tempRangeSet, false);
 	}
 
-	public void setRanges(Set<ApiRange> ranges){
-		for(ApiVersionHolder version : versions){
-			version.cb.setSelected(false);
-		}
-		for(ApiRange range : ranges){
-			for(int i = range.from.version.getNumber(); i <= range.to.version.getNumber(); ++i){
-				versions[i].cb.setSelected(true);
+	public void setRanges(Set<ApiRange> ranges, boolean updateCb){
+		if(updateCb){
+			for(ApiVersionHolder version : versions){
+				version.cb.setSelected(false);
+			}
+			for(ApiRange range : ranges){
+				for(int i = range.from.version.getNumber(); i <= range.to.version.getNumber(); ++i){
+					versions[i].cb.setSelected(true);
+				}
 			}
 		}
 		this.ranges = ranges;
 	}
 
 	public void showDescription(ApiVersion version){
-		System.out.println("Show description: " + version.getName());
 		descArea.setText("<html>" +
 				"<h1>" + version.getName() + "</h1>" +
 				"<p>Changes:</p>" +
@@ -130,36 +151,34 @@ public class ChooseApiDialogPanel extends JPanel{
 			showDescription(version);
 			cbList0.setSelectedIndex(version.getNumber());
 			if(!rightClick){
-				System.out.println("Toggle " + version.getName());
 				if(cb.isSelected()){
 					cb.setSelected(false);
-					cb.revalidate();
 					// uncheck this checkbox
 					// since it is incompatible with this version, all previous minor versions must be incompatible too
 					// e.g. if incompatible with 1.3.0, 1.0.0-1.2.0 must be incompatible too
 					for(int i = version.getNumber(); i >= 0; --i){
 						versions[i].cb.setSelected(false);
-						versions[i].cb.revalidate();
 						if(versions[i].version.isIncompatible()){
 							// inclusive, so put this after setSelected(false)
 							break;
 						}
 					}
+					// Poggit marks 1.0.0 as incompatible, so no need to check post-loop condition
 				}else{
 					// check this checkbox
 					// thus compatible with all following minor versions
 					// e..g if compatible with 1.5.0, 1.y.0 where y >= 5 must be compatible too
 					cb.setSelected(true);
-					cb.revalidate();
 					for(int i = version.getNumber() + 1; i < versions.length; ++i){
 						if(versions[i].version.isIncompatible()){
 							// exclusive, so put this before setSelected(true)
 							break;
 						}
 						versions[i].cb.setSelected(true);
-						versions[i].cb.revalidate();
 					}
 				}
+				recalculateRanges();
+				cbList0.repaint();
 			}
 		}
 	}
@@ -208,10 +227,12 @@ public class ChooseApiDialogPanel extends JPanel{
 
 	public static class ChooseApiDialogWrapper extends DialogWrapper{
 		private final Consumer<Set<ApiVersion>> setApiList;
+		private final Set<String> initialRanges;
 		private ChooseApiDialogPanel panel;
 
-		public ChooseApiDialogWrapper(JPanel parent, Consumer<Set<ApiVersion>> setApiList){
+		public ChooseApiDialogWrapper(JPanel parent, Set<String> initialRanges, Consumer<Set<ApiVersion>> setApiList){
 			super(parent, true);
+			this.initialRanges = initialRanges;
 			init();
 			setTitle("Choose Supported API Versions");
 			this.setApiList = setApiList;
@@ -219,7 +240,7 @@ public class ChooseApiDialogPanel extends JPanel{
 
 		@Override
 		protected JComponent createCenterPanel(){
-			panel = new ChooseApiDialogPanel();
+			panel = new ChooseApiDialogPanel(initialRanges);
 			return panel;
 		}
 

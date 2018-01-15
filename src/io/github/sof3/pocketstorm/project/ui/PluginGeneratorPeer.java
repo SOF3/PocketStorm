@@ -75,7 +75,7 @@ public class PluginGeneratorPeer implements ProjectGeneratorPeer<PluginProjectSe
 		rwListener.listen(ui_edit_version);
 		rwListener.listen(ui_edit_desc);
 		ui_button_apiEdit.addActionListener(e -> {
-			ChooseApiDialogPanel.ChooseApiDialogWrapper dialog = new ChooseApiDialogPanel.ChooseApiDialogWrapper(ui_panel, this::setApiList);
+			ChooseApiDialogPanel.ChooseApiDialogWrapper dialog = new ChooseApiDialogPanel.ChooseApiDialogWrapper(ui_panel, apiList.stream().map(ApiVersion::getName).collect(Collectors.toSet()), this::setApiList);
 			dialog.show();
 			if(dialog.getExitCode() == DialogWrapper.OK_EXIT_CODE){
 				dialog.publishResult();
@@ -85,7 +85,7 @@ public class PluginGeneratorPeer implements ProjectGeneratorPeer<PluginProjectSe
 
 	public void setApiList(Set<ApiVersion> versions){
 		apiList = versions;
-		ui_label_apiList.setText(versions.stream().map(ApiVersion::getName).collect(Collectors.joining(", ")));
+		ui_label_apiList.setText(versions.stream().sorted().map(ApiVersion::getName).collect(Collectors.joining(", ")));
 	}
 
 	private void validateName() throws SettingsException{

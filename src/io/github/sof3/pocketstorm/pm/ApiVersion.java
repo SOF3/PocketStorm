@@ -10,11 +10,13 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.google.gson.stream.JsonReader;
 
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-public class ApiVersion{
+public class ApiVersion implements Comparable<ApiVersion>{
 	private final int number;
 	private final String name;
 	private List<String> description;
@@ -53,5 +55,10 @@ public class ApiVersion{
 		}
 		reader.endObject();
 		return instance;
+	}
+
+	@Override
+	public int compareTo(@NotNull ApiVersion o){
+		return Integer.compare(number, o.number);
 	}
 }
