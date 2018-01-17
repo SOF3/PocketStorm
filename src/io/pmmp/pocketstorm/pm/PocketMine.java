@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 import com.google.gson.stream.JsonReader;
 import org.apache.http.client.fluent.Request;
 
-import static io.pmmp.pocketstorm.SneakyException.s;
+import static io.pmmp.pocketstorm.MyUtil.s;
 
 public final class PocketMine{
 	public final static Pattern VALID_PLUGIN_NAME = Pattern.compile("^[A-Za-z0-9_.-]+$");

@@ -13,19 +13,20 @@ import org.jetbrains.annotations.Nullable;
 import org.yaml.snakeyaml.Yaml;
 
 @Value
-@Builder(builderClassName = "Builder")
+@Builder
 public class PluginProjectSettings{
 	@NotNull String name; // configurable from generator peer
 	@NotNull String namespace; // configurable from generator peer
 	@NotNull String main; // configurable from generator peer
 	@NotNull Set<String> api; // configurable from generator peer
-	@Nullable Set<Integer> protocols = null;
-	@NotNull Set<String> extensions = new HashSet<>();
+	@Nullable Set<Integer> protocols;
+	@lombok.Builder.Default @NotNull Set<String> extensions = new HashSet<>();
 	@NotNull String initialVersion; // configurable from generator peer
 	@Nullable String description; // configurable from generator peer
 	@NotNull List<String> authors; // configurable from generator peer
-	@Nullable String website = null;
-	@NotNull LoadOrder load = LoadOrder.POSTWORLD;
+	@Nullable String website; // configurable from generator peer;
+	@NotNull LoadOrder load;
+	Boolean initListener;
 
 	public void dumpYaml(Writer os){
 		Yaml yaml = new Yaml();
@@ -62,6 +63,17 @@ public class PluginProjectSettings{
 		StringWriter writer = new StringWriter();
 		dumpYaml(writer);
 		return writer.toString();
+	}
+
+	public void putVars(Properties props){
+		props.put("PLUGIN_NAME", name);
+		props.put("NAMESPACE", namespace);
+		props.put("FILE_NAME", main + ".php");
+		props.put("MAIN_CLASS", main);
+		props.put("VERSION", initialVersion);
+		props.put("INIT_MAIN_COMMANDS", Boolean.FALSE);
+		props.put("COMMANDS", new ArrayList<>());
+		props.put("INIT_MAIN_LISTENER", initListener);
 	}
 
 	public enum LoadOrder{

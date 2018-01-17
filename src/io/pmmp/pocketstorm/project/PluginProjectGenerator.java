@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.swing.Icon;
 
 import com.intellij.ide.fileTemplates.FileTemplate;
@@ -19,6 +20,7 @@ import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.platform.ProjectGeneratorPeer;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.impl.file.PsiDirectoryFactory;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
@@ -26,13 +28,12 @@ import org.jetbrains.annotations.Nullable;
 
 import com.jetbrains.php.config.PhpLanguageLevel;
 import com.jetbrains.php.config.PhpProjectConfigurationFacade;
-
 import io.pmmp.pocketstorm.MyUtil;
 import io.pmmp.pocketstorm.PocketStormIcon;
 import io.pmmp.pocketstorm.pm.PocketMine;
 import io.pmmp.pocketstorm.project.ui.PluginGeneratorPeer;
 
-import static io.pmmp.pocketstorm.SneakyException.s;
+import static io.pmmp.pocketstorm.MyUtil.s;
 
 public class PluginProjectGenerator extends WebProjectTemplate<PluginProjectSettings>{
 	@Nls
@@ -79,13 +80,20 @@ public class PluginProjectGenerator extends WebProjectTemplate<PluginProjectSett
 				model.addContentEntry(src.getParent()).addSourceFolder(src, false);
 				model.commit();
 
-				FileTemplate template = FileTemplateManager.getInstance(project).getInternalTemplate("PocketMine Plugin Main Class");
-				Properties props = new Properties();
+				FileTemplateManager templateManager = FileTemplateManager.getInstance(project);
+				FileTemplate template = templateManager.getInternalTemplate("PocketMine Plugin Main Class");
+				Properties props = templateManager.getDefaultProperties();
+				settings.putVars(props);
 
-				FileTemplateUtil.createFromTemplate(template, settings.getMain() + ".php", props,
+				System.out.println("props = " + props.entrySet().stream().map(entry -> entry.getKey() + ": <" + entry.getValue().getClass() + "> " + entry.getValue().toString()).collect(Collectors.joining(", ")));
+
+				PsiElement element = FileTemplateUtil.createFromTemplate(template, settings.getMain() + ".php", props,
 						PsiDirectoryFactory.getInstance(project).createDirectory(MyUtil.lazyCreateChildDir(this, src, settings.getNamespace())));
+				for(PsiElement psiElement : element.getChildren()){
+					System.out.println("psiElement = " + psiElement);
+				}
 			}catch(Exception e){
-				throw s(e);
+				s(e);
 			}
 		});
 	}

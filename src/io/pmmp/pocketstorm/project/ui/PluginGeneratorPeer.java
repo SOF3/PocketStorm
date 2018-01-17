@@ -25,8 +25,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import io.pmmp.pocketstorm.pm.ApiVersion;
-import io.pmmp.pocketstorm.project.PluginProjectGenerator;
 import io.pmmp.pocketstorm.pm.PocketMine;
+import io.pmmp.pocketstorm.project.PluginProjectGenerator;
 import io.pmmp.pocketstorm.project.PluginProjectSettings;
 
 public class PluginGeneratorPeer implements ProjectGeneratorPeer<PluginProjectSettings>{
@@ -40,6 +40,9 @@ public class PluginGeneratorPeer implements ProjectGeneratorPeer<PluginProjectSe
 	private JLabel ui_label_apiList;
 	private JLabel ui_label_warning;
 	private JTextField ui_edit_author;
+	private JTextField ui_edit_website;
+	private JComboBox ui_select_load;
+	private JCheckBox ui_check_initListener;
 
 	@Getter private boolean backgroundJobRunning = true;
 
@@ -118,6 +121,7 @@ public class PluginGeneratorPeer implements ProjectGeneratorPeer<PluginProjectSe
 		ui_edit_author.getDocument().addDocumentListener(listener);
 
 		ui_edit_version.setText("0.1.0");
+		ui_select_load.setSelectedIndex(PluginProjectSettings.LoadOrder.POSTWORLD.ordinal());
 	}
 
 	@Nullable
@@ -230,6 +234,9 @@ public class PluginGeneratorPeer implements ProjectGeneratorPeer<PluginProjectSe
 				.description(ui_edit_desc.getText().trim().length() > 0 ? ui_edit_desc.getText().trim() : null)
 				.api(apiList.stream().map(ApiVersion::getName).collect(Collectors.toSet()))
 				.authors(Arrays.asList((String[]) (ui_edit_author.getText().trim().isEmpty() ? new String[0] : new String[]{ui_edit_author.getText().trim()})))
+				.website(ui_edit_website.getText().trim().length() > 0 ? ui_edit_website.getText().trim() : null)
+				.load(PluginProjectSettings.LoadOrder.values()[ui_select_load.getSelectedIndex()])
+				.initListener(ui_check_initListener.isSelected())
 				.build();
 	}
 
@@ -312,5 +319,4 @@ public class PluginGeneratorPeer implements ProjectGeneratorPeer<PluginProjectSe
 			field.getDocument().addDocumentListener(this);
 		}
 	}
-
 }

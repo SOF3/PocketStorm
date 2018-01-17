@@ -21,7 +21,7 @@ class ${MAIN_CLASS} extends PluginBase{
 
 	public function onCommand(CommandSender \$sender, Command \$command, string \$label, array \$args) : bool{
 		switch(\$command->getName()){
-#foreach( $command in $commands )
+#foreach( $command in $COMMANDS )
 			case "${command}":
 				// TODO: Handle the /${command} command
 				return true;

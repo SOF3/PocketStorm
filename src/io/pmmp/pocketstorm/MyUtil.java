@@ -2,6 +2,8 @@ package io.pmmp.pocketstorm;
 
 import java.io.IOException;
 
+import lombok.Lombok;
+
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,5 +24,11 @@ public final class MyUtil{
 			}
 		}
 		return file;
+	}
+
+	public static RuntimeException s(@NotNull Throwable delegate){
+		//noinspection ResultOfMethodCallIgnored,ThrowableNotThrown
+		Lombok.sneakyThrow(delegate);
+		return new RuntimeException("This code is never executed");
 	}
 }

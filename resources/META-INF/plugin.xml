@@ -27,6 +27,7 @@
 	</change-notes>
 
 	<idea-version since-build="173"/>
+	<!-- targets 173.4301.24 -->
 
 	<depends>com.intellij.modules.lang</depends>
 	<depends>com.jetbrains.php</depends>
