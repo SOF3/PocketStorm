@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 import com.google.gson.stream.JsonReader;
 import org.apache.http.client.fluent.Request;
 
-import static io.pmmp.pocketstorm.MyUtil.s;
+import static io.pmmp.pocketstorm.util.MyUtil.s;
 
 public final class PocketMine{
 	public final static Pattern VALID_PLUGIN_NAME = Pattern.compile("^[A-Za-z0-9_.-]+$");
@@ -21,7 +21,7 @@ public final class PocketMine{
 	};
 	public final static Pattern VALID_IDENTIFIER_NAME = Pattern.compile("^[A-za-z_][A-Za-z0-9_]*$");
 
-	public final static Cache<Map<String, ApiVersion>> apiList = new Cache<>(() -> {
+	public final static AsyncCache<Map<String, ApiVersion>> apiList = new AsyncCache<>(() -> {
 		try(
 				InputStream is = Request.Get("https://poggit.pmmp.io/pmapis").execute().returnContent().asStream();
 				JsonReader reader = new JsonReader(new InputStreamReader(is))

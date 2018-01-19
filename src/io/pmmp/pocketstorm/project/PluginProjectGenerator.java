@@ -1,11 +1,6 @@
 package io.pmmp.pocketstorm.project;
 
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import javax.swing.Icon;
 
@@ -21,19 +16,21 @@ import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.platform.ProjectGeneratorPeer;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFileFactory;
 import com.intellij.psi.impl.file.PsiDirectoryFactory;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.yaml.YAMLLanguage;
 
 import com.jetbrains.php.config.PhpLanguageLevel;
 import com.jetbrains.php.config.PhpProjectConfigurationFacade;
-import io.pmmp.pocketstorm.MyUtil;
 import io.pmmp.pocketstorm.PocketStormIcon;
 import io.pmmp.pocketstorm.pm.PocketMine;
 import io.pmmp.pocketstorm.project.ui.PluginGeneratorPeer;
+import io.pmmp.pocketstorm.util.MyUtil;
 
-import static io.pmmp.pocketstorm.MyUtil.s;
+import static io.pmmp.pocketstorm.util.MyUtil.s;
 
 public class PluginProjectGenerator extends WebProjectTemplate<PluginProjectSettings>{
 	@Nls
@@ -62,11 +59,8 @@ public class PluginProjectGenerator extends WebProjectTemplate<PluginProjectSett
 	@Override
 	public void generateProject(@NotNull Project project, @NotNull VirtualFile root, @NotNull PluginProjectSettings settings, @NotNull Module module){
 		ApplicationManager.getApplication().runWriteAction(() -> {
-			try(
-					Writer writer = new OutputStreamWriter(root.createChildData(this, "plugin.yml").getOutputStream(this))
-			){
-				settings.dumpYaml(writer);
-				writer.close();
+			try{
+				PsiFileFactory.getInstance(project).createFileFromText("plugin.yml", YAMLLanguage.INSTANCE, settings.toString());
 
 				Set<String> php = new HashSet<>();
 				settings.getApi().forEach(api -> php.addAll(PocketMine.apiList.getValue().get(api).getPhp()));
@@ -89,11 +83,12 @@ public class PluginProjectGenerator extends WebProjectTemplate<PluginProjectSett
 
 				PsiElement element = FileTemplateUtil.createFromTemplate(template, settings.getMain() + ".php", props,
 						PsiDirectoryFactory.getInstance(project).createDirectory(MyUtil.lazyCreateChildDir(this, src, settings.getNamespace())));
+				System.out.println("element.getChildren() = " + Arrays.toString(element.getChildren()));
 				for(PsiElement psiElement : element.getChildren()){
 					System.out.println("psiElement = " + psiElement);
 				}
 			}catch(Exception e){
-				s(e);
+				throw s(e);
 			}
 		});
 	}

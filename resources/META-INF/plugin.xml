@@ -23,7 +23,7 @@
 			<li>Initial version</li>
 			<li>Added project type "PocketMine plugin"</li>
 		</ul>
-    ]]>
+		]]>
 	</change-notes>
 
 	<idea-version since-build="173"/>
@@ -32,12 +32,22 @@
 	<depends>com.intellij.modules.lang</depends>
 	<depends>com.jetbrains.php</depends>
 	<depends>com.intellij.modules.platform</depends>
+	<depends>org.jetbrains.plugins.yaml</depends>
 
 	<extensions defaultExtensionNs="com.intellij">
 		<projectTemplatesFactory implementation="io.pmmp.pocketstorm.project.PocketTemplateFactory"/>
 		<directoryProjectGenerator implementation="io.pmmp.pocketstorm.project.PluginProjectGenerator"/>
 		<internalFileTemplate name="PocketMine Plugin Main Class"/>
+
+		<inspectionToolProvider implementation="io.pmmp.pocketstorm.inspections.InspectionsProvider"/>
 	</extensions>
+
+	<project-components>
+		<component>
+			<implementation-class>io.pmmp.pocketstorm.PocketProjectComponent</implementation-class>
+			<loadForDefaultProject/>
+		</component>
+	</project-components>
 
 	<actions>
 		<!-- Add your actions here -->

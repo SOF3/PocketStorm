@@ -9,14 +9,14 @@ import com.intellij.openapi.application.ApplicationManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class Cache<T>{
+public class AsyncCache<T>{
 	private final Supplier<T> supplier;
 
 	private final List<Consumer<T>> consumers = new LinkedList<>();
 	private volatile int state = 0;
 	private T value;
 
-	public Cache(Supplier<T> supplier){
+	public AsyncCache(Supplier<T> supplier){
 		this.supplier = supplier;
 	}
 
@@ -27,7 +27,7 @@ public class Cache<T>{
 			}
 			ApplicationManager.getApplication().executeOnPooledThread(() -> {
 				value = supplier.get();
-				synchronized(Cache.this){
+				synchronized(AsyncCache.this){
 					state = 2;
 					consumers.forEach(c -> c.accept(value));
 				}
