@@ -17,23 +17,6 @@ import com.jetbrains.php.PhpIndex;
 import com.jetbrains.php.lang.psi.elements.*;
 
 public final class MyUtil{
-	@NotNull
-	public static VirtualFile lazyCreateChildDir(Object requester, VirtualFile file, String path) throws IOException{
-		return lazyCreateChildDir(requester, file, path.split("[\\\\/]+"));
-	}
-
-	@NotNull
-	public static VirtualFile lazyCreateChildDir(Object requester, VirtualFile file, String[] path) throws IOException{
-		for(String name : path){
-			VirtualFile child;
-			if((child = file.findChild(name)) != null){
-				file = child;
-			}else{
-				file = file.createChildDirectory(requester, name);
-			}
-		}
-		return file;
-	}
 
 	@SuppressWarnings("ConstantConditions")
 	public static RuntimeException s(@NotNull Throwable delegate){
@@ -127,12 +110,4 @@ public final class MyUtil{
 		return list;
 	}
 
-	public static boolean isIn(VirtualFile parent, VirtualFile child){
-		do{
-			if(parent.equals(child)){
-				return true;
-			}
-		}while((child = child.getParent()) != null);
-		return false;
-	}
 }

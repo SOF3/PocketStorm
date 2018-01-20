@@ -40,6 +40,8 @@
 		<internalFileTemplate name="PocketMine Plugin Main Class"/>
 
 		<inspectionToolProvider implementation="io.pmmp.pocketstorm.inspections.InspectionsProvider"/>
+
+		<additionalLibraryRootsProvider implementation="io.pmmp.pocketstorm.pm.PocketSdkProvider"/>
 	</extensions>
 
 	<project-components>

@@ -6,10 +6,12 @@ import java.io.Reader;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import lombok.Getter;
 
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -73,5 +75,9 @@ public final class RegisteredPermissionCache{
 				e.printStackTrace();
 			}
 		});
+	}
+
+	public static Stream<RegisteredPermissionCache> all(){
+		return map.valueStream();
 	}
 }

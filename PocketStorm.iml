@@ -10,8 +10,9 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="PROVIDED" name="php-openapi" level="project" />
-    <orderEntry type="library" name="org.projectlombok:lombok:1.16.20" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Lombok 1.16.20" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="ignore this (I just use this to decompile jars)" level="project" />
-    <orderEntry type="library" name="yaml (org.jetbrains.plugins.yaml)" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="yaml (org.jetbrains.plugins.yaml)" level="project" />
+    <orderEntry type="library" name="JGit 4.10.0" level="project" />
   </component>
 </module>

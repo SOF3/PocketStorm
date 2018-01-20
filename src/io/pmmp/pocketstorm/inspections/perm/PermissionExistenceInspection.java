@@ -10,8 +10,6 @@ import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.codeInspection.ui.ListTable;
 import com.intellij.codeInspection.ui.ListWrappingTableModel;
-import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.ui.components.JBLabel;
@@ -71,29 +69,36 @@ public class PermissionExistenceInspection extends PocketInspection{
 								StringLiteralUtil.LiteralType.fromPsi(expr))
 				});
 
-				VirtualFile dir = method.getContainingFile().getContainingDirectory().getVirtualFile();
-				VirtualFile src = null;
-				for(VirtualFile root : ProjectRootManager.getInstance(method.getProject()).getContentSourceRoots()){
-					if(MyUtil.isIn(root, dir)){
-						src = root;
-						break;
-					}
-				}
-				if(src == null){
-					return;
-				}
+//				VirtualFile dir = method.getContainingFile().getContainingDirectory().getVirtualFile();
+//				VirtualFile src = null;
+//				for(VirtualFile root : ProjectRootManager.getInstance(method.getProject()).getContentSourceRoots()){
+//					if(MyFileUtil.isIn(root, dir)){
+//						src = root;
+//						break;
+//					}
+//				}
+//				if(src == null){
+//					return;
+//				}
+//				RegisteredPermissionCache cache = RegisteredPermissionCache.getInstance(src.getParent());
 
-				RegisteredPermissionCache cache = RegisteredPermissionCache.getInstance(src.getParent());
-				for(String declared : cache.getValue()){
-					if(perm.matches(declared)){
-						return;
-					}
-				}
 				for(String declaredPermission : declaredPermissions){
 					if(WildcardString.parseWildcard(declaredPermission).matches(perm)){
 						return;
 					}
 				}
+
+				if(RegisteredPermissionCache.all().anyMatch(cache -> {
+					for(String declared : cache.getValue()){
+						if(perm.matches(declared)){
+							return true;
+						}
+					}
+					return false;
+				})){
+					return;
+				}
+
 				problemsHolder.registerProblem(expr, String.format("The permission \"%s\" is not declared anywhere", perm.getString()), ProblemHighlightType.GENERIC_ERROR_OR_WARNING);
 			}
 		};

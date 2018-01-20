@@ -23,6 +23,7 @@ public class ApiVersion implements Comparable<ApiVersion>{
 	private Set<String> php;
 	private boolean incompatible;
 	private boolean indev;
+	private String pharLink;
 
 	public static ApiVersion fromJson(int number, String name, JsonReader reader) throws IOException{
 		ApiVersion instance = new ApiVersion(number, name);
@@ -50,6 +51,20 @@ public class ApiVersion implements Comparable<ApiVersion>{
 					break;
 				case "indev":
 					instance.indev = reader.nextBoolean();
+					break;
+				case "phar":
+					reader.beginObject();
+					while(reader.hasNext()){
+						if(reader.nextName().equals("default")){
+							instance.pharLink = reader.nextString();
+						}else{
+							reader.skipValue();
+						}
+					}
+					reader.endObject();
+					break;
+				default:
+					reader.skipValue();
 					break;
 			}
 		}

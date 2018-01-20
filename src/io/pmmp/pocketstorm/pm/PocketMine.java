@@ -40,8 +40,4 @@ public final class PocketMine{
 			throw s(e);
 		}
 	});
-
-	public static void clonePocketMine(){
-		// TODO implement
-	}
 }

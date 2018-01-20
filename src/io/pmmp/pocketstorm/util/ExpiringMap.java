@@ -2,15 +2,13 @@ package io.pmmp.pocketstorm.util;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.Value;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class ExpiringMap<K, V>{
 	@Value
@@ -68,13 +66,16 @@ public class ExpiringMap<K, V>{
 		return null;
 	}
 
+	public Stream<V> valueStream(){
+		return internal.values().stream().map(Container::getValue);
+	}
+
 
 	private void clearCache(){
 		if(nextExpiry > System.nanoTime()){
 			return;
 		}
-		Set<Map.Entry<K, Container<V>>> removals = internal.entrySet().stream().filter(entry -> entry.getValue().expired()).collect(Collectors.toSet());
-		removals.forEach(entry -> internal.remove(entry.getKey()));
+		internal.values().removeIf(Container::expired);
 		renewNextExpiry();
 	}
 

@@ -46,6 +46,19 @@ public class AsyncCache<T>{
 		consumer.accept(value);
 	}
 
+	public T waitSync(){
+		if(state != 0){
+			do{
+				try{
+					Thread.sleep(10);
+				}catch(InterruptedException e){
+					e.printStackTrace();
+				}
+			}while(state != 0);
+		}
+		return value;
+	}
+
 	@NotNull
 	public T getValue(){
 		if(value == null){

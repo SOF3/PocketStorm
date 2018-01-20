@@ -29,7 +29,7 @@ import io.pmmp.pocketstorm.pm.PocketMine;
 import io.pmmp.pocketstorm.project.PluginProjectGenerator;
 import io.pmmp.pocketstorm.project.PluginProjectSettings;
 
-public class PluginGeneratorPeer implements ProjectGeneratorPeer<PluginProjectSettings>{
+public class PluginProjectPeer implements ProjectGeneratorPeer<PluginProjectSettings>{
 	private JPanel ui_panel;
 	private JTextField ui_edit_name;
 	private JTextField ui_edit_main_ns;
@@ -57,7 +57,7 @@ public class PluginGeneratorPeer implements ProjectGeneratorPeer<PluginProjectSe
 			this::validateVersion,
 	};
 
-	public PluginGeneratorPeer(PluginProjectGenerator generator){
+	public PluginProjectPeer(PluginProjectGenerator generator){
 		this.generator = generator;
 		PocketMine.apiList.request(apis -> {
 			//noinspection ConstantConditions

@@ -26,6 +26,7 @@
           <package name="lombok" withSubpackages="true" static="false" />
           <emptyLine />
           <package name="com.intellij" withSubpackages="true" static="false" />
+          <package name="com.jetbrains" withSubpackages="true" static="false" />
           <package name="org.jetbrains" withSubpackages="true" static="false" />
           <emptyLine />
           <package name="" withSubpackages="true" static="false" />

@@ -27,8 +27,8 @@ import com.jetbrains.php.config.PhpLanguageLevel;
 import com.jetbrains.php.config.PhpProjectConfigurationFacade;
 import io.pmmp.pocketstorm.PocketStormIcon;
 import io.pmmp.pocketstorm.pm.PocketMine;
-import io.pmmp.pocketstorm.project.ui.PluginGeneratorPeer;
-import io.pmmp.pocketstorm.util.MyUtil;
+import io.pmmp.pocketstorm.project.ui.PluginProjectPeer;
+import io.pmmp.pocketstorm.util.MyFileUtil;
 
 import static io.pmmp.pocketstorm.util.MyUtil.s;
 
@@ -82,7 +82,7 @@ public class PluginProjectGenerator extends WebProjectTemplate<PluginProjectSett
 				System.out.println("props = " + props.entrySet().stream().map(entry -> entry.getKey() + ": <" + entry.getValue().getClass() + "> " + entry.getValue().toString()).collect(Collectors.joining(", ")));
 
 				PsiElement element = FileTemplateUtil.createFromTemplate(template, settings.getMain() + ".php", props,
-						PsiDirectoryFactory.getInstance(project).createDirectory(MyUtil.lazyCreateChildDir(this, src, settings.getNamespace())));
+						PsiDirectoryFactory.getInstance(project).createDirectory(MyFileUtil.lazyCreateChildDir(this, src, settings.getNamespace())));
 				System.out.println("element.getChildren() = " + Arrays.toString(element.getChildren()));
 				for(PsiElement psiElement : element.getChildren()){
 					System.out.println("psiElement = " + psiElement);
@@ -96,6 +96,6 @@ public class PluginProjectGenerator extends WebProjectTemplate<PluginProjectSett
 	@NotNull
 	@Override
 	public ProjectGeneratorPeer<PluginProjectSettings> createPeer(){
-		return new PluginGeneratorPeer(this);
+		return new PluginProjectPeer(this);
 	}
 }
