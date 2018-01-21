@@ -1,4 +1,4 @@
-package io.pmmp.pocketstorm.inspections.perm;
+package io.pmmp.pocketstorm.perm;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -6,15 +6,18 @@ import java.io.Reader;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import lombok.Getter;
 
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import io.pmmp.pocketstorm.util.ExpiringMap;
+import io.pmmp.pocketstorm.util.MyUtil;
 import org.yaml.snakeyaml.Yaml;
 
 public final class RegisteredPermissionCache{
@@ -73,5 +76,12 @@ public final class RegisteredPermissionCache{
 				e.printStackTrace();
 			}
 		});
+	}
+
+	@NotNull
+	public static Stream<RegisteredPermissionCache> find(Project project){
+		return map.values().filter(cache -> MyUtil.isIn(project.getBaseDir(), cache.parent));
+		// TODO include libraries
+		// TODO include default permissions
 	}
 }

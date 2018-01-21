@@ -40,6 +40,8 @@
 		<internalFileTemplate name="PocketMine Plugin Main Class"/>
 
 		<inspectionToolProvider implementation="io.pmmp.pocketstorm.inspections.InspectionsProvider"/>
+
+		<completion.contributor language="PHP" implementationClass="io.pmmp.pocketstorm.perm.PermissionCompletionContributor"/>
 	</extensions>
 
 	<project-components>
@@ -52,5 +54,4 @@
 	<actions>
 		<!-- Add your actions here -->
 	</actions>
-
 </idea-plugin>

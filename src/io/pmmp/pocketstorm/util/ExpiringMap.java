@@ -4,13 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.Value;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class ExpiringMap<K, V>{
 	@Value
@@ -66,6 +66,10 @@ public class ExpiringMap<K, V>{
 			return c.value;
 		}
 		return null;
+	}
+
+	public Stream<V> values(){
+		return internal.values().stream().map(Container::getValue);
 	}
 
 

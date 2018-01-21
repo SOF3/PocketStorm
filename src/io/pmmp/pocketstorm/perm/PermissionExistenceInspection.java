@@ -1,4 +1,4 @@
-package io.pmmp.pocketstorm.inspections.perm;
+package io.pmmp.pocketstorm.perm;
 
 import java.awt.BorderLayout;
 import java.util.Arrays;
@@ -10,7 +10,6 @@ import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.codeInspection.ui.ListTable;
 import com.intellij.codeInspection.ui.ListWrappingTableModel;
-import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
@@ -71,19 +70,12 @@ public class PermissionExistenceInspection extends PocketInspection{
 								StringLiteralUtil.LiteralType.fromPsi(expr))
 				});
 
-				VirtualFile dir = method.getContainingFile().getContainingDirectory().getVirtualFile();
-				VirtualFile src = null;
-				for(VirtualFile root : ProjectRootManager.getInstance(method.getProject()).getContentSourceRoots()){
-					if(MyUtil.isIn(root, dir)){
-						src = root;
-						break;
-					}
-				}
-				if(src == null){
+				VirtualFile srcParent = MyUtil.findSourceParent(method);
+				if(srcParent == null){
 					return;
 				}
 
-				RegisteredPermissionCache cache = RegisteredPermissionCache.getInstance(src.getParent());
+				RegisteredPermissionCache cache = RegisteredPermissionCache.getInstance(srcParent);
 				for(String declared : cache.getValue()){
 					if(perm.matches(declared)){
 						return;

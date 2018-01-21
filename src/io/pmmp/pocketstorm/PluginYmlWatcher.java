@@ -4,7 +4,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileContentsChangedAdapter;
 import org.jetbrains.annotations.NotNull;
 
-import io.pmmp.pocketstorm.inspections.perm.RegisteredPermissionCache;
+import io.pmmp.pocketstorm.perm.RegisteredPermissionCache;
 
 class PluginYmlWatcher extends VirtualFileContentsChangedAdapter{
 	@Override

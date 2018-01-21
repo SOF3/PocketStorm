@@ -7,6 +7,7 @@ import java.util.List;
 
 import lombok.Lombok;
 
+import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.impl.source.tree.LeafPsiElement;
@@ -134,5 +135,18 @@ public final class MyUtil{
 			}
 		}while((child = child.getParent()) != null);
 		return false;
+	}
+
+	@Nullable
+	public static VirtualFile findSourceParent(PsiElement element){
+		VirtualFile dir = element.getContainingFile().getContainingDirectory().getVirtualFile();
+		VirtualFile src = null;
+		for(VirtualFile root : ProjectRootManager.getInstance(element.getProject()).getContentSourceRoots()){
+			if(isIn(root, dir)){
+				src = root;
+				break;
+			}
+		}
+		return src != null ? src.getParent() : null;
 	}
 }
